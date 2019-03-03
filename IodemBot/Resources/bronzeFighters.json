@@ -84,7 +84,7 @@
       "name": "Wyvern",
       "imgurl": "https://goldensunwiki.net/w/images/thumb/f/f7/Gryphon_Dark_Dawn.jpg/250px-Gryphon_Dark_Dawn.jpg",
       "movepool": [
-		"Planet Driver",
+		"Planet Diver",
 		"Raging Heat",
 		"Mad Blast"
 	  ],
@@ -137,7 +137,7 @@
       "name": "Wyvern",
       "imgurl": "",
       "movepool": [
-		"Planet Driver",
+		"Planet Diver",
 		"Raging Heat",
 		"Mad Blast"
 	  ],
@@ -504,7 +504,7 @@
       "name": "Skeleton",
       "imgurl": "https://goldensunwiki.net/w/images/thumb/9/97/Skeleton_Dark_Dawn.jpg/300px-Skeleton_Dark_Dawn.jpg",
       "movepool": [
-		"Ragnarök",
+		"Ragnarok",
 		"Cutting Edge",
 		"Helm Splitter"
 	  ],
@@ -530,7 +530,7 @@
       "name": "Skeleton",
       "imgurl": "",
       "movepool": [
-		"Ragnarök",
+		"Ragnarok",
 		"Helm Splitter",
 		"Cutting Edge"
 	  ],
@@ -557,7 +557,7 @@
       "imgurl": "",
       "movepool": [
 		"Cutting Edge",
-		"Ragnarök",
+		"Ragnarok",
 		"Helm Splitter"
 	  ],
       "stats": {
@@ -735,11 +735,11 @@
 		"Oil Drop"
 	  ],
       "stats": {
-        "maxHP": 200,
+        "maxHP": 500,
         "maxPP": 160,
-        "Atk": 60,
-        "Def": 20,
-        "Spd": 40
+        "Atk": 90,
+        "Def": 30,
+        "Spd": 50
       },
       "elstats": {
         "VenusAtk": 100,
@@ -760,9 +760,9 @@
       "movepool": [
 	  ],
       "stats": {
-        "maxHP": 110,
+        "maxHP": 200,
         "maxPP": 34,
-        "Atk": 42,
+        "Atk": 40,
         "Def": 5,
         "Spd": 9
       },
@@ -784,9 +784,9 @@
 		"Slice"
 	  ],
       "stats": {
-        "maxHP": 244,
+        "maxHP": 300,
         "maxPP": 52,
-        "Atk": 46,
+        "Atk": 60,
         "Def": 8,
         "Spd": 20
       },
@@ -808,7 +808,7 @@
 		
 	  ],
       "stats": {
-        "maxHP": 110,
+        "maxHP": 200,
         "maxPP": 34,
         "Atk": 42,
         "Def": 5,
@@ -834,7 +834,7 @@
 	  "Bear Claw"
 	  ],
       "stats": {
-        "maxHP": 109,
+        "maxHP": 200,
         "maxPP": 34,
         "Atk": 99,
         "Def": 27,
@@ -858,7 +858,7 @@
 	  "Bear Claw"
 	  ],
       "stats": {
-        "maxHP": 109,
+        "maxHP": 200,
         "maxPP": 34,
         "Atk": 99,
         "Def": 27,
@@ -882,7 +882,7 @@
 	  "Bear Claw"
 	  ],
       "stats": {
-        "maxHP": 109,
+        "maxHP": 200,
         "maxPP": 34,
         "Atk": 99,
         "Def": 27,
