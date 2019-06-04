@@ -6,11 +6,11 @@ using IodemBot.Core.Leveling;
 using IodemBot.Core.UserManagement;
 using IodemBot.Extensions;
 using IodemBot.Modules.ColossoBattles;
+using IodemBot.Modules.GoldenSunMechanics;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace IodemBot.Modules
@@ -23,7 +23,7 @@ namespace IodemBot.Modules
         public async Task Echo([Remainder] string message)
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             embed.WithDescription(message);
             await Context.Message.DeleteAsync();
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -35,14 +35,14 @@ namespace IodemBot.Modules
         public async Task Mock([Remainder] string message)
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             embed.WithAuthor(Context.User);
-            embed.WithDescription(stringToMock(message));
+            embed.WithDescription(StringToMock(message));
             await Context.Message.DeleteAsync();
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
 
-        private string stringToMock(string text)
+        private string StringToMock(string text)
         {
             var lower = text.ToLower();
             var s = new StringBuilder();
@@ -66,7 +66,7 @@ namespace IodemBot.Modules
         public async Task Ping()
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             embed.WithDescription($"Pong!");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
         }
@@ -77,7 +77,7 @@ namespace IodemBot.Modules
         public async Task Wiki([Remainder] string searchQuery = "")
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             string link = "https://goldensunwiki.net/wiki/Main_Page";
             if (searchQuery != "")
             {
@@ -94,37 +94,22 @@ namespace IodemBot.Modules
         public async Task Subreddit()
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             embed.WithDescription($"https://reddit.com/r/GoldenSun");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
-        }
-
-        [Command("flag"), Alias("country")]
-        [Cooldown(5)]
-        [Remarks("Set the flag that shows up next to your name")]
-        public async Task setFlag(string flag)
-        {
-            var r = new Regex("[\uD83C][\uDDE6-\uDDFF][\uD83C][\uDDE6-\uDDFF]");
-            if (r.IsMatch(flag))
-            {
-                var account = UserAccounts.GetAccount(Context.User);
-                account.Flag = flag;
-                UserAccounts.SaveAccounts();
-                await Context.Channel.SendMessageAsync(flag);
-            }
         }
 
         [Command("xp")]
         [Cooldown(5)]
         [Remarks("Get information about your level etc")]
-        public async Task xp()
+        public async Task Xp()
         {
             var user = (SocketGuildUser)Context.User;
             var account = UserAccounts.GetAccount(user);
             var embed = new EmbedBuilder();
             var p = new PlayerFighter(user);
 
-            embed.WithColor(Colors.get(account.element.ToString()));
+            embed.WithColor(Colors.Get(account.Element.ToString()));
             var author = new EmbedAuthorBuilder();
             author.WithName(user.DisplayName());
             author.WithIconUrl(user.GetAvatarUrl());
@@ -138,35 +123,35 @@ namespace IodemBot.Modules
         [Command("status")]
         [Cooldown(5)]
         [Remarks("Get information about your level etc")]
-        public async Task status(SocketGuildUser user = null)
+        public async Task Status(SocketGuildUser user = null)
         {
             user = user ?? (SocketGuildUser)Context.User;
             var account = UserAccounts.GetAccount(user);
             var embed = new EmbedBuilder();
             var p = new PlayerFighter(user);
 
-            embed.WithColor(Colors.get(account.element.ToString()));
+            embed.WithColor(Colors.Get(account.Element.ToString()));
             var author = new EmbedAuthorBuilder();
-            author.WithName($"{user.DisplayName()} {account.Flag}");
+            author.WithName($"{user.DisplayName()}");
             author.WithIconUrl(user.GetAvatarUrl());
             embed.WithAuthor(author);
-            embed.WithThumbnailUrl(user.GetAvatarUrl());
+            //embed.WithThumbnailUrl(user.GetAvatarUrl());
             //embed.WithDescription($"Status.");
 
-            embed.AddField("Element", account.element, true);
-            embed.AddField("Class", account.gsClass, true);
+            //embed.AddField("Element", account.element, true);
 
             embed.AddField("Level", account.LevelNumber, true);
+            embed.AddField("XP", $"{account.XP} - next in {Leveling.XPforNextLevel(account.XP)}", true);
             embed.AddField("Rank", UserAccounts.GetRank(user) + 1, true);
 
-            embed.AddField("XP", account.XP, true);
-            embed.AddField("XP to level up", Leveling.XPforNextLevel(account.XP), true);
-
+            embed.AddField("Class", account.GsClass, true);
             embed.AddField("Colosso wins", account.ServerStats.ColossoWins, true);
-            //embed.AddField("", "");
 
-            embed.AddField("Stats", p.stats.ToString());
-            embed.AddField("Psynergy", p.getMoves());
+            embed.AddField("Current Equip", account.Inv.GearToString(AdeptClassSeriesManager.GetClassSeries(account).Archtype), true);
+            embed.AddField("Psynergy", p.GetMoves(false), false);
+
+            embed.AddField("Stats", p.stats.ToString(), true);
+            embed.AddField("Elemental Stats", p.elstats.ToString(), true);
             embed.AddField("Unlocked Classes", account.BonusClasses.Length == 0 ? "none" : string.Join(", ", account.BonusClasses));
 
             var Footer = new EmbedFooterBuilder();
@@ -181,14 +166,14 @@ namespace IodemBot.Modules
         [Cooldown(5)]
         [RequireUserPermission(GuildPermission.ManageGuild)]
         [Remarks("Hidden Information on Tri-Elemental Classes")]
-        public async Task tri(SocketGuildUser user = null)
+        public async Task Tri(SocketGuildUser user = null)
         {
             user = user ?? (SocketGuildUser)Context.User;
             var account = UserAccounts.GetAccount(user);
             var embed = new EmbedBuilder();
             var p = new PlayerFighter(user);
 
-            embed.WithColor(Colors.get(account.element.ToString()));
+            embed.WithColor(Colors.Get(account.Element.ToString()));
             var author = new EmbedAuthorBuilder();
             author.WithName(user.DisplayName());
             author.WithIconUrl(user.GetAvatarUrl());
@@ -253,7 +238,7 @@ namespace IodemBot.Modules
         [Command("roleinfo")]
         [Cooldown(10)]
         [Remarks("Get information on a specific role")]
-        public async Task roleInfo([Remainder] string args)
+        public async Task RoleInfo([Remainder] string args)
         {
             args = args.ToLower();
             var mentionedRole = Context.Guild.Roles.Where(r => r.Name.ToLower() == args).FirstOrDefault();
@@ -285,13 +270,13 @@ namespace IodemBot.Modules
         [Command("Usercount"), Alias("members", "membercount")]
         [Cooldown(15)]
         [Remarks("Display the number of users")]
-        public async Task countUsers()
+        public async Task CountUsers()
         {
             var count = Context.Guild.Users.Count;
             var offline = Context.Guild.Users.Where(u => u.Status == UserStatus.Offline).Count();
             var online = count - offline;
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             embed.WithDescription($"{count} Users with {online} Online");
 
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -300,7 +285,7 @@ namespace IodemBot.Modules
         [Command("choose"), Alias("pick")]
         [Cooldown(15)]
         [Remarks("Choose from several words or group of words seperated by ','")]
-        public async Task choose([Remainder] string s)
+        public async Task Choose([Remainder] string s)
         {
             var choices = s.Split(' ');
             if (s.Contains(','))
@@ -312,7 +297,7 @@ namespace IodemBot.Modules
                 c.Trim();
             }
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             var choice = choices[(new Random()).Next(0, choices.Length)];
             embed.WithDescription($"➡️ {choice}");
             await Context.Channel.SendMessageAsync("", false, embed.Build());
@@ -321,11 +306,11 @@ namespace IodemBot.Modules
         [Command("rank"), Alias("top")]
         [Cooldown(15)]
         [Remarks("Get the most active users and your rank")]
-        public async Task rank()
+        public async Task Rank()
         {
             var topAccounts = UserAccounts.GetTop(10);
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             string[] Emotes = new string[] { "🥇", "🥈", "🥈", "🥉", "🥉", "🥉", "   ", "   ", "   ", "   " };
             var builder = new StringBuilder();
             for (int i = 0; i < 10; i++)
@@ -355,7 +340,7 @@ namespace IodemBot.Modules
         public async Task Gladiator([Remainder] string rem = "")
         {
             var embed = new EmbedBuilder();
-            embed.WithColor(Colors.get("Iodem"));
+            embed.WithColor(Colors.Get("Iodem"));
             SocketGuildUser user;
             if (Context.Message.MentionedUsers.FirstOrDefault() != null)
             {
