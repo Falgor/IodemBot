@@ -68,6 +68,75 @@
             }
         ]
     },
+    "Vault": {
+        "Name": "Vault",
+        "Image": "https://cdn.discordapp.com/attachments/497696510688100352/595583507393150997/unknown.png",
+        "FlavourText": "A theft has been committed in Vault, who's the culprit?",
+        "IsDefault": true,
+        "Matchups": [
+            {
+                "EnemyNames": [ "Slime 1" ],
+                "Reward": {
+                    "xp": 20,
+                    "gold": 7,
+                    "ItemProbability": 15,
+                    "Item": "Travel Vest"
+                },
+                "FlavourText": ""
+            },
+            {
+                "EnemyNames": [ "" ],
+                "FlavourText": "",
+                "Reward": {
+                    "xp": 20,
+                    "gold": 7
+                }
+            },
+            {
+                "EnemyNames": [ "" ],
+                "Reward": {
+                    "xp": 20,
+                    "gold": 7,
+                    "ChestProbability": 10,
+                    "Chest": "Wooden"
+                },
+                "FlavourText": ""
+            },
+            {
+                "EnemyNames": [ "" ],
+                "Reward": {
+                    "ChestProbability": 50,
+                    "Chest": "Wooden"
+                },
+                "FlavourText": ""
+            },
+            {
+                "EnemyNames": [ "" ],
+                "Reward": {
+                    "ItemProbability": 10,
+                    "Item": ""
+                },
+                "FlavourText": ""
+            },
+            {
+                "EnemyNames": [ "" ],
+                "Reward": {
+                    "DungeonProbability": 10,
+                    "DungeonUnlock": ""
+                },
+                "FlavourText": ""
+            },
+            {
+                "EnemyNames": [ "" ],
+                "image": "",
+                "Reward": {
+                    "DungeonProbability": 10,
+                    "DungeonUnlock": "Vault Cave"
+                },
+                "FlavourText": ""
+            }
+        ]
+    },
     "Sol Sanctum": {
         "Name": "Sol Sanctum",
         "Image": "https://cdn.discordapp.com/attachments/497696510688100352/595581189901910029/unknown.png",
