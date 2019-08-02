@@ -75,32 +75,57 @@
         "IsDefault": true,
         "Matchups": [
             {
-                "EnemyNames": [ "Slime 1" ],
-                "Reward": {
-                    "xp": 20,
-                    "gold": 7,
-                    "ItemProbability": 15,
-                    "Item": "Travel Vest"
-                },
-                "FlavourText": ""
+                "EnemyNames": [ "Slime 2" ],
+                "RewardTables": [
+                    [
+                        {
+                            "xp": 25,
+                            "coins": 9,
+                            "Weight": 8
+                        }
+                    ],
+                    [
+                        {
+                            "Item": "Travel Vest",
+                            "Weight": 2
+                        },
+                        {
+                            "Weight": 1
+                        }
+                    ]
+                ],
+                "FlavourText": "It looks like that Slime gulped something! A stolen item perhaps?"
             },
             {
-                "EnemyNames": [ "" ],
-                "FlavourText": "",
-                "Reward": {
-                    "xp": 20,
-                    "gold": 7
-                }
+                "EnemyNames": [ "Skeleton 1", "Zombie 1" ],
+                "RewardTables": [
+                    [
+                        {
+                            "xp": 40,
+                            "coins": 20
+                        }
+                    ],
+                    [
+                        {
+                            "Chest": "Wooden",
+                            "Weight": 3
+                        },
+                        {
+                            "Weight": 7
+                        }
+                    ]
+                ],
+                "FlavourText": "Your investigations lead you to the cemetary. Wait, is that grave moving? Oh no..."
             },
             {
-                "EnemyNames": [ "" ],
+                "EnemyNames": [ "Wild Wolf 1", "Wild Wolf 1" ],
                 "Reward": {
-                    "xp": 20,
-                    "gold": 7,
-                    "ChestProbability": 10,
-                    "Chest": "Wooden"
+                    "xp": 45,
+                    "gold": 15,
+                    "DungeonProbability": 10,
+                    "Dungeon": "Vault Cave"
                 },
-                "FlavourText": ""
+                "FlavourText": "The Skeleton's bones have attracted a dog... and wolves! Protect the dog!"
             },
             {
                 "EnemyNames": [ "" ],
@@ -108,7 +133,7 @@
                     "ChestProbability": 50,
                     "Chest": "Wooden"
                 },
-                "FlavourText": ""
+                "FlavourText": "Thankful for saving him, the dog leads you to the inn's attic"
             },
             {
                 "EnemyNames": [ "" ],
