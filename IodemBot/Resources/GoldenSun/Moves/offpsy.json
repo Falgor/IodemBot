@@ -82,7 +82,7 @@
     },
     "Quake": {
         "name": "Quake",
-        "targetType": 3,
+        "targetType": 4,
         "emote": "<:Quake:536958036472889346>",
         "range": 2,
         "element": 0,
@@ -1987,7 +1987,8 @@
         "range": 1,
         "element": 1,
         "PPCost": 0,
-        "power": 250
+        "power": 120,
+        "percentageDamage": 35
     },
     "Rolling Flame": {
         "name": "Rolling Flame",
@@ -2007,5 +2008,15 @@
         "element": 3,
         "PPCost": 0,
         "dmgMult": 1.5
+    },
+
+    "Fatal Fang": {
+        "name": "Fatal Fang",
+        "targetType": 4,
+        "emote": "<:Rampage:537766290031509524>",
+        "range": 1,
+        "element": 4,
+        "PPCost": 0,
+        "addDamage": 11
     }
 }

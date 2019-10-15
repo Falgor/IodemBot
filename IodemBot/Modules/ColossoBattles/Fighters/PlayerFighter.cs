@@ -3,6 +3,7 @@ using IodemBot.Core.UserManagement;
 using IodemBot.Extensions;
 using IodemBot.Modules.GoldenSunMechanics;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,7 +69,7 @@ namespace IodemBot.Modules.ColossoBattles
 
         public Stats GetStats(uint Level)
         {
-            return BaseStat + (FinalBaseStats - BaseStat) * 0.01010101 * Level * 0.66666;
+            return BaseStat + (FinalBaseStats - BaseStat) * ((double)Level / 99 / 1.5);
         }
     }
 
@@ -78,13 +79,13 @@ namespace IodemBot.Modules.ColossoBattles
         private static StatHolder MageStatHolder = new StatHolder(new Stats(28, 23, 9, 5, 9), new Stats(744, 280, 355, 160, 397));
         private static StatHolder AverageStatHolder = new StatHolder(new Stats(30, 20, 11, 6, 8), new Stats(775, 262, 368, 165, 384));
 
-        public LevelOption LevelOption { get; set; } = LevelOption.Default;
+        public LevelOption LevelOption { get; set; } = LevelOption.CappedLevel;
         public InventoryOption InventoryOption { get; set; } = InventoryOption.Default;
         public DjinnOption DjinnOption { get; set; } = DjinnOption.Default;
         public BaseStatOption BaseStatOption { get; set; } = BaseStatOption.Default;
         public BaseStatManipulationOption BaseStatManipulationOption { get; set; } = BaseStatManipulationOption.Default;
 
-        public uint SetLevel { get; set; } = 50;
+        public uint SetLevel { get; set; } = 100;
         public Stats StatMultiplier { get; set; } = new Stats(100, 100, 100, 100, 100);
 
         public ElementalStats ElStatMultiplier = new ElementalStats(100, 100, 100, 100, 100, 100, 100, 100);
@@ -96,16 +97,18 @@ namespace IodemBot.Modules.ColossoBattles
 
             p.Name = (user is SocketGuildUser) ? ((SocketGuildUser)user).DisplayName() : user.Username;
             p.avatar = avatar;
+            p.ImgUrl = user.GetAvatarUrl();
             p.factory = this;
             if (user is SocketGuildUser)
             {
                 p.guildUser = (SocketGuildUser)user;
             }
+            p.Moves = AdeptClassSeriesManager.GetMoveset(avatar);
 
             var Class = AdeptClassSeriesManager.GetClass(avatar);
             var classSeries = AdeptClassSeriesManager.GetClassSeries(avatar);
             p.Stats = GetStats(avatar);
-            p.ElStats = classSeries.Elstats;
+            p.ElStats = AdeptClassSeriesManager.GetElStats(avatar);
             if (classSeries.Name == "Curse Mage Series" || classSeries.Name == "Medium Series")
             {
                 p.IsImmuneToItemCurse = true;
@@ -119,7 +122,10 @@ namespace IodemBot.Modules.ColossoBattles
                     {
                         p.Stats += g.AddStatsOnEquip;
                     });
-
+                    gear.ForEach(g =>
+                    {
+                        p.ElStats += g.AddElStatsOnEquip;
+                    });
                     gear.ForEach(g =>
                     {
                         p.Stats *= g.MultStatsOnEquip;
@@ -164,7 +170,7 @@ namespace IodemBot.Modules.ColossoBattles
                             }
                         }
                     });
-                    p.HPrecovery = (int)(p.HPrecovery * (1 + avatar.LevelNumber / 33));
+                    p.HPrecovery = (int)(p.HPrecovery * (1 + (double)avatar.LevelNumber / 33));
 
                     break;
 
@@ -181,10 +187,11 @@ namespace IodemBot.Modules.ColossoBattles
                     break;
             }
 
+            p.Stats *= Class.StatMultipliers;
+            p.Stats *= 0.01;
             p.Stats *= StatMultiplier;
             p.Stats *= 0.01;
 
-            p.Moves = AdeptClassSeriesManager.GetMoveset(avatar);
             return p;
         }
 
@@ -193,10 +200,22 @@ namespace IodemBot.Modules.ColossoBattles
             var classSeries = AdeptClassSeriesManager.GetClassSeries(avatar);
             var adept = AdeptClassSeriesManager.GetClass(avatar);
             var classMultipliers = adept.StatMultipliers;
-            var level = LevelOption == LevelOption.Default
-                || (LevelOption == LevelOption.CappedLevel && avatar.LevelNumber <= SetLevel)
-                ? avatar.LevelNumber
-                : SetLevel;
+            uint level;
+            switch (LevelOption)
+            {
+                default:
+                case LevelOption.Default:
+                    level = avatar.LevelNumber;
+                    break;
+
+                case LevelOption.SetLevel:
+                    level = SetLevel;
+                    break;
+
+                case LevelOption.CappedLevel:
+                    level = Math.Min(avatar.LevelNumber, SetLevel);
+                    break;
+            };
             Stats Stats;
             switch (BaseStatOption)
             {
@@ -209,10 +228,6 @@ namespace IodemBot.Modules.ColossoBattles
                     Stats = AverageStatHolder.GetStats(level);
                     break;
             }
-
-            Stats *= classMultipliers;
-            Stats *= 0.01;
-
             return Stats;
         }
     }
